@@ -1,0 +1,6 @@
+{
+  "name": "File Manager",
+  "description": "A modern, fast, simple, and completely offline File Manager with a pure dark UI, text editor, zip/unzip, and full file operation support.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

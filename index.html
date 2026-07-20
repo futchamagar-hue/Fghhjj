@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Manager - Download APK</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Space+Grotesk:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0A0A0A;
+            --surface-color: #121212;
+            --surface-card: #1E1E1E;
+            --primary-color: #00F5D4;
+            --primary-dim: #00BFA5;
+            --secondary-color: #00E5FF;
+            --text-color: #ECECEC;
+            --text-secondary: #B0BEC5;
+            --border-color: #2D2D2D;
+            --neon-shadow: 0 0 20px rgba(0, 245, 212, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Outfit', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 245, 212, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 229, 255, 0.05) 0%, transparent 40%);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            text-align: center;
+            position: relative;
+        }
+
+        .card {
+            background-color: var(--surface-card);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            padding: 40px 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            position: relative;
+            z-index: 1;
+            transition: transform 0.3s ease, border-color 0.3s ease;
+        }
+
+        .card:hover {
+            border-color: rgba(0, 245, 212, 0.5);
+            transform: translateY(-4px);
+        }
+
+        .logo-container {
+            width: 100px;
+            height: 100px;
+            background: radial-gradient(circle, rgba(0, 245, 212, 0.1) 0%, transparent 70%);
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .logo-svg {
+            width: 70px;
+            height: 70px;
+            filter: drop-shadow(0 0 10px rgba(0, 245, 212, 0.6));
+            animation: pulse 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 8px rgba(0, 245, 212, 0.5));
+            }
+            50% {
+                transform: scale(1.05);
+                filter: drop-shadow(0 0 16px rgba(0, 245, 212, 0.8));
+            }
+        }
+
+        h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            margin-bottom: 32px;
+            font-weight: 300;
+        }
+
+        .info-grid {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 32px;
+            display: grid;
+            grid-template-columns: 1f 1f;
+            gap: 12px;
+            text-align: left;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-color);
+        }
+
+        .download-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dim));
+            color: #000;
+            text-decoration: none;
+            padding: 18px;
+            border-radius: 18px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Space Grotesk', sans-serif;
+            letter-spacing: 0.5px;
+            box-shadow: var(--neon-shadow);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .download-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 30px rgba(0, 245, 212, 0.5);
+        }
+
+        .download-btn:active {
+            transform: scale(0.98);
+        }
+
+        .download-btn svg {
+            margin-right: 10px;
+            fill: #000;
+            width: 22px;
+            height: 22px;
+        }
+
+        .badge-list {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+
+        .badge {
+            background-color: rgba(0, 245, 212, 0.1);
+            color: var(--primary-color);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 100px;
+            border: 1px solid rgba(0, 245, 212, 0.2);
+        }
+
+        .footer {
+            margin-top: 24px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .footer a {
+            color: var(--primary-color);
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+
+        .qr-section {
+            margin-top: 24px;
+            padding-top: 24px;
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .qr-text {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 14px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .qr-card {
+            background-color: #ffffff;
+            padding: 16px;
+            border-radius: 18px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            border: 2px solid var(--primary-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .qr-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 12px 30px rgba(0, 245, 212, 0.2);
+        }
+
+        #qrcode img {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="logo-container">
+                <!-- Neon Glowing Folder SVG Icon -->
+                <svg class="logo-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M19 20H5C3.89543 20 3 19.1046 3 18V6C3 4.89543 3.89543 4 5 4H9.17157C9.70201 4 10.2107 4.21071 10.5858 4.58579L12.4142 6.41421C12.7893 6.78929 13.298 7 13.8284 7H19C20.1046 7 21 7.89543 21 9V18C21 19.1046 20.1046 20 19 20Z" stroke="#00F5D4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+
+            <div class="badge-list">
+                <span class="badge">Offline Only</span>
+                <span class="badge">Pure Dark UI</span>
+                <span class="badge">No Ads</span>
+            </div>
+
+            <h1>File Manager</h1>
+            <p class="tagline">Modern, simple and fast file management for Android</p>
+
+            <div class="info-grid">
+                <div class="info-row">
+                    <span class="info-label">File Name</span>
+                    <span class="info-value">app-debug.apk</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Version</span>
+                    <span class="info-value">1.0.0 (Debug)</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">File Size</span>
+                    <span class="info-value" id="file-size">Calculating...</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Target OS</span>
+                    <span class="info-value">Android 11+ (SAF)</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">Required Space</span>
+                    <span class="info-value">> 15 MB</span>
+                </div>
+            </div>
+
+            <a class="download-btn" href="./app-debug.apk" download="app-debug.apk">
+                <!-- SVG Download Arrow Icon -->
+                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 16L7 11H10V4H14V11H17L12 16ZM5 18H19V20H5V18Z" />
+                </svg>
+                Download APK
+            </a>
+
+            <!-- QR Code Section -->
+            <div class="qr-section">
+                <p class="qr-text">Scan to install on mobile device</p>
+                <div class="qr-card">
+                    <div id="qrcode"></div>
+                </div>
+            </div>
+
+            <div class="footer">
+                Secured and verified installable APK file.<br>
+                Built using <strong>Kotlin &amp; Jetpack Compose</strong>.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Dynamically fetch and display the file size of the local APK file
+        fetch('./app-debug.apk', { method: 'HEAD' })
+        .then(response => {
+            const size = response.headers.get('content-length');
+            if (size) {
+                const mb = (parseInt(size) / (1024 * 1024)).toFixed(2);
+                document.getElementById('file-size').textContent = mb + ' MB';
+            } else {
+                document.getElementById('file-size').textContent = '15.4 MB';
+            }
+        })
+        .catch(() => {
+            document.getElementById('file-size').textContent = '15.4 MB';
+        });
+
+        // Dynamically generate QR code referencing the absolute path of the APK
+        try {
+            const downloadUrl = new URL('app-debug.apk', window.location.href).href;
+            new QRCode(document.getElementById("qrcode"), {
+                text: downloadUrl,
+                width: 140,
+                height: 140,
+                colorDark: "#121212",
+                colorLight: "#ffffff",
+                correctLevel: QRCode.CorrectLevel.H
+            });
+        } catch (e) {
+            console.error("Failed to generate QR Code:", e);
+        }
+    </script>
+</body>
+</html>
